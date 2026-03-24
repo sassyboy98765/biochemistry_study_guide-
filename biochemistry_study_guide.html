@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biochemistry Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1815;
+    --surface2: #222018;
+    --gold: #c9a84c;
+    --gold-light: #e2c77a;
+    --gold-dim: #7a6330;
+    --cream: #f0ead8;
+    --cream-dim: #a89d85;
+    --red: #b5453a;
+    --green: #4a8c6f;
+    --blue: #3a6fa8;
+    --border: rgba(201,168,76,0.2);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 60px 24px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .sub-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  h1 span { color: var(--gold); }
+  .header-desc {
+    color: var(--cream-dim);
+    font-size: 14px;
+    font-style: italic;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 20px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tab-btn {
+    padding: 7px 18px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--cream-dim);
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .tab-btn:hover { border-color: var(--gold-dim); color: var(--cream); }
+  .tab-btn.active {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* MAIN LAYOUT */
+  main { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .section-subtitle { color: var(--cream-dim); font-size: 13px; font-style: italic; }
+
+  /* Q&A CARDS */
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .qa-card:hover { border-color: var(--gold-dim); }
+
+  .qa-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    min-width: 28px;
+    padding-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .q-text {
+    flex: 1;
+    font-size: 14.5px;
+    color: var(--cream);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .q-toggle {
+    color: var(--gold-dim);
+    font-size: 18px;
+    transition: transform 0.3s;
+    min-width: 20px;
+    text-align: center;
+    padding-top: 1px;
+  }
+  .qa-card.open .q-toggle { transform: rotate(45deg); color: var(--gold); }
+
+  .qa-answer {
+    display: none;
+    padding: 0 20px 18px 62px;
+    color: var(--cream-dim);
+    font-size: 14px;
+    line-height: 1.8;
+    border-top: 1px solid rgba(201,168,76,0.08);
+  }
+  .qa-card.open .qa-answer { display: block; }
+  .qa-answer p { margin-bottom: 10px; }
+  .qa-answer p:last-child { margin-bottom: 0; }
+  .qa-answer strong { color: var(--gold-light); font-weight: 600; }
+  .qa-answer em { color: var(--cream); font-style: italic; }
+  .qa-answer ul { margin: 8px 0 8px 16px; }
+  .qa-answer li { margin-bottom: 5px; }
+  .qa-answer .formula {
+    font-family: 'Courier New', monospace;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+  .qa-answer .highlight {
+    background: rgba(201,168,76,0.07);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .tag-carb { background: rgba(74,140,111,0.2); color: #6dbf97; border: 1px solid rgba(74,140,111,0.3); }
+  .tag-meta { background: rgba(58,111,168,0.2); color: #7aaee0; border: 1px solid rgba(58,111,168,0.3); }
+  .tag-prot { background: rgba(181,69,58,0.2); color: #e07a70; border: 1px solid rgba(181,69,58,0.3); }
+  .tag-lipid { background: rgba(140,110,74,0.2); color: #c49a60; border: 1px solid rgba(140,110,74,0.3); }
+  .tag-nuc { background: rgba(130,74,140,0.2); color: #c07ad8; border: 1px solid rgba(130,74,140,0.3); }
+  .tag-enz { background: rgba(168,140,58,0.2); color: #e0c870; border: 1px solid rgba(168,140,58,0.3); }
+
+  .expand-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--cream-dim);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+  }
+  .expand-all-btn:hover { border-color: var(--gold-dim); color: var(--cream); }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid var(--border);
+    color: var(--cream-dim);
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sub-label">Complete Study Reference</div>
+  <h1>Bio<span>chemistry</span></h1>
+  <p class="header-desc">Carbohydrates · Metabolism · Proteins · Lipids · Nucleic Acids · Enzymes</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('one')">1 Mark</button>
+  <button class="tab-btn" onclick="switchTab('two')">2 Mark</button>
+  <button class="tab-btn" onclick="switchTab('five')">5 Mark</button>
+  <button class="tab-btn" onclick="switchTab('eight')">8 Mark</button>
+</div>
+
+<main>
+
+<!-- ===== 1 MARK ===== -->
+<div class="section active" id="one">
+  <div class="section-header">
+    <div class="section-title">1 Mark Answers</div>
+    <div class="section-subtitle">Short definitions and single-concept answers</div>
+  </div>
+  <button class="expand-all-btn" onclick="expandAll('one')">⊕ Expand All</button>
+
+  <!-- Q1 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q1.</span>
+      <span class="q-text">Define carbohydrates.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>Carbohydrates are <strong>polyhydroxy aldehydes or ketones</strong>, or compounds that yield these upon hydrolysis. They are composed of carbon (C), hydrogen (H), and oxygen (O), with the general empirical formula <em>(CH₂O)ₙ</em>. They serve as the primary energy source, structural components, and cell-signaling molecules in living organisms.</p>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q2.</span>
+      <span class="q-text">What is an aldohexose?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>An <strong>aldohexose</strong> is a six-carbon monosaccharide (hexose) containing an <strong>aldehyde (–CHO) group</strong> at carbon-1. It has the molecular formula C₆H₁₂O₆. <em>Examples: Glucose, Galactose, Mannose.</em> There are 16 possible aldohexose stereoisomers (8 D-forms and 8 L-forms).</p>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q3.</span>
+      <span class="q-text">Define mutarotation.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p><strong>Mutarotation</strong> is the spontaneous change in optical rotation (and hence the interconversion) of α and β anomeric forms of a reducing sugar in solution through the open-chain form, until an equilibrium mixture is reached. <em>Example:</em> α-D-Glucose ([α]D = +112°) mutarotates to an equilibrium mixture at +52.7° in water.</p>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q4.</span>
+      <span class="q-text">What is anomeric carbon?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>The <strong>anomeric carbon</strong> is the new chiral center created when a sugar cyclizes via hemiacetal or hemiketal formation. It is the carbon derived from the carbonyl carbon (C-1 in aldoses, C-2 in ketoses) that can exist in two configurations — <strong>α (axial –OH)</strong> and <strong>β (equatorial –OH)</strong> — giving rise to the two anomers.</p>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q5.</span>
+      <span class="q-text">Define reducing sugar.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>A <strong>reducing sugar</strong> is any sugar that can act as a <strong>reducing agent</strong> due to the presence of a free or potentially free aldehyde or ketone group (i.e., a free anomeric –OH). It reduces oxidizing agents like Fehling's solution and Benedict's reagent. <em>Examples: Glucose, Maltose, Lactose.</em> Sucrose is a non-reducing sugar (no free anomeric –OH).</p>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q6.</span>
+      <span class="q-text">What is glycolysis?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>Glycolysis</strong> (Embden–Meyerhof–Parnas pathway) is the <strong>anaerobic cytoplasmic pathway</strong> that converts one molecule of glucose (6C) into two molecules of pyruvate (3C), yielding a net gain of <strong>2 ATP and 2 NADH</strong>. It occurs in 10 enzymatic steps in the cytosol of all cells.</p>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q7.</span>
+      <span class="q-text">Define TCA cycle.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p>The <strong>Tricarboxylic Acid (TCA) cycle</strong>, also called the Krebs cycle or citric acid cycle, is a <strong>cyclic series of 8 reactions in the mitochondrial matrix</strong> that completely oxidizes acetyl-CoA to CO₂, generating 3 NADH, 1 FADH₂, and 1 GTP per turn, along with reducing equivalents for oxidative phosphorylation.</p>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q8.</span>
+      <span class="q-text">What is oxidative phosphorylation?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>Oxidative phosphorylation</strong> is the process in the <strong>inner mitochondrial membrane</strong> by which ATP is synthesized using the electrochemical proton gradient (proton-motive force) generated by the electron transport chain. Electrons from NADH/FADH₂ reduce O₂ to H₂O, driving proton pumping across the membrane, which powers ATP synthase.</p>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q9.</span>
+      <span class="q-text">Define gluconeogenesis.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>Gluconeogenesis</strong> is the metabolic pathway for the <strong>de novo synthesis of glucose</strong> from non-carbohydrate precursors such as lactate, glycerol, and glucogenic amino acids. It occurs primarily in the <strong>liver and kidney cortex</strong>, and is essentially the reverse of glycolysis with 3 unique bypass reactions (consuming 6 ATP equivalents).</p>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q10.</span>
+      <span class="q-text">What is glycogenolysis?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>Glycogenolysis</strong> is the enzymatic <strong>breakdown of glycogen</strong> to release glucose for energy. The enzyme <em>glycogen phosphorylase</em> cleaves α-1,4-glycosidic bonds by phosphorolysis to release <strong>glucose-1-phosphate</strong>, which is converted to glucose-6-phosphate and enters glycolysis (muscle) or is dephosphorylated to free glucose (liver).</p>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q11.</span>
+      <span class="q-text">Define amino acid.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>An <strong>amino acid</strong> is an organic molecule containing both an <strong>amino group (–NH₂)</strong> and a <strong>carboxyl group (–COOH)</strong> attached to the same alpha carbon (α-carbon), along with a distinctive side chain (R group) that determines its identity and properties. In proteins, the 20 standard amino acids are all L-α-amino acids.</p>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q12.</span>
+      <span class="q-text">What is a peptide bond?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>A <strong>peptide bond</strong> is a <strong>covalent amide linkage</strong> formed between the α-carboxyl group (–COOH) of one amino acid and the α-amino group (–NH₂) of another, with the loss of a water molecule (condensation reaction). It has partial double-bond character due to resonance, making it <strong>planar and rigid</strong>. The –CO–NH– group is the peptide bond.</p>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q13.</span>
+      <span class="q-text">Define primary structure of protein.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>The <strong>primary structure</strong> of a protein is the <strong>linear sequence of amino acids</strong> in the polypeptide chain linked by peptide bonds, read from the N-terminus (free amino end) to the C-terminus (free carboxyl end). It is determined by the gene encoding the protein and dictates all higher levels of protein structure and function.</p>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q14.</span>
+      <span class="q-text">What is optical isomerism?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p><strong>Optical isomerism</strong> is a form of stereoisomerism where compounds with the same molecular formula and connectivity differ in the spatial arrangement of atoms around a <strong>chiral (asymmetric) carbon</strong>, rotating plane-polarized light either clockwise (+, dextrorotatory) or counterclockwise (−, levorotatory). Mirror-image pairs are called <strong>enantiomers</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q15.</span>
+      <span class="q-text">Define lipids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-lipid">Lipids</span>
+      <p><strong>Lipids</strong> are a diverse group of <strong>hydrophobic or amphipathic biomolecules</strong> that are soluble in organic solvents (e.g., chloroform, ether) but sparingly soluble in water. They include fats, oils, waxes, phospholipids, sterols, and fat-soluble vitamins. They function in energy storage, membrane structure, signaling, and insulation.</p>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q16.</span>
+      <span class="q-text">What are fatty acids?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-lipid">Lipids</span>
+      <p><strong>Fatty acids</strong> are long-chain <strong>carboxylic acids</strong> with a hydrophobic hydrocarbon tail and a hydrophilic carboxyl head (–COOH). They may be <strong>saturated</strong> (no double bonds, e.g., palmitic acid C16:0) or <strong>unsaturated</strong> (one or more double bonds, e.g., oleic acid C18:1). They are components of triacylglycerols and phospholipids.</p>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q17.</span>
+      <span class="q-text">Define nucleoside.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <p>A <strong>nucleoside</strong> is a molecule consisting of a <strong>nitrogenous base</strong> (purine or pyrimidine) covalently linked to a <strong>pentose sugar</strong> (ribose in RNA, deoxyribose in DNA) via an N-glycosidic bond at C-1' of the sugar. It lacks a phosphate group. <em>Examples: Adenosine, Guanosine, Thymidine, Cytidine.</em></p>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q18.</span>
+      <span class="q-text">What is DNA denaturation?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <p><strong>DNA denaturation</strong> (melting) is the <strong>separation of the two complementary strands</strong> of the DNA double helix by disruption of hydrogen bonds between base pairs, caused by heat, extreme pH, or denaturing agents (formamide, urea). It is monitored by increased absorbance at 260 nm (hyperchromic effect). The midpoint temperature is called the <strong>melting temperature (Tm)</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q19.</span>
+      <span class="q-text">Define enzyme.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-enz">Enzymes</span>
+      <p>An <strong>enzyme</strong> is a <strong>biological catalyst</strong> — mostly protein (some are RNA = ribozymes) — that <strong>accelerates the rate of chemical reactions</strong> without being consumed, by lowering the activation energy of the reaction. Enzymes are highly specific (substrate specificity), and their activity can be regulated. They act at the <strong>active site</strong> where substrate binds.</p>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q20.</span>
+      <span class="q-text">What is a cofactor?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-enz">Enzymes</span>
+      <p>A <strong>cofactor</strong> is a <strong>non-protein chemical component</strong> required for an enzyme's catalytic activity. Cofactors may be <strong>metal ions</strong> (Zn²⁺, Mg²⁺, Fe²⁺ — tightly bound) or <strong>organic molecules</strong> (coenzymes — loosely bound, e.g., NAD⁺, FAD, CoA). The enzyme without its cofactor is called an <strong>apoenzyme</strong>; with it, a <strong>holoenzyme</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2 MARK ===== -->
+<div class="section" id="two">
+  <div class="section-header">
+    <div class="section-title">2 Mark Answers</div>
+    <div class="section-subtitle">Brief comparisons, short notes, and concise explanations</div>
+  </div>
+  <button class="expand-all-btn" onclick="expandAll('two')">⊕ Expand All</button>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q1.</span>
+      <span class="q-text">Differentiate aldohexose and ketohexose.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <div class="highlight">
+        <strong>Aldohexose:</strong> 6-carbon sugar with an <em>aldehyde (–CHO)</em> group at C-1. Has 4 chiral carbons, 16 stereoisomers. Examples: Glucose, Galactose, Mannose.<br><br>
+        <strong>Ketohexose:</strong> 6-carbon sugar with a <em>ketone (C=O)</em> group at C-2. Has 3 chiral carbons, 8 stereoisomers. Examples: Fructose, Sorbose.
+      </div>
+      <p>Both share the formula <strong>C₆H₁₂O₆</strong> and are thus structural isomers. Aldohexoses are better reducing agents. Ketohexoses form furanose rings more easily.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q2.</span>
+      <span class="q-text">Explain mutarotation with example.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p><strong>Mutarotation</strong> is the change in optical rotation of a sugar solution over time as the α and β anomeric forms interconvert through the open-chain intermediate.</p>
+      <div class="formula">
+        α-D-Glucose [α]D = +112.2°
+        ⇌ Open-chain ⇌ β-D-Glucose [α]D = +18.7°
+        Equilibrium mixture: [α]D = +52.7°
+        (Ratio: ~36% α : ~64% β at 25°C)
+      </div>
+      <p>The process is catalyzed by dilute acid, alkali, or the enzyme <em>mutarotase (aldose-1-epimerase)</em>. The interconversion proceeds via ring-opening and ring-closure at the anomeric carbon (C-1).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q3.</span>
+      <span class="q-text">Distinguish reducing and non-reducing sugars.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <div class="highlight">
+        <strong>Reducing sugars:</strong> Have a <em>free anomeric –OH</em> (free aldehyde/ketone). Reduce Cu²⁺ in Fehling's/Benedict's to Cu₂O (brick-red precipitate). Show mutarotation. Examples: Glucose, Fructose, Lactose, Maltose.<br><br>
+        <strong>Non-reducing sugars:</strong> Anomeric carbons of both monosaccharides are involved in the glycosidic bond — <em>no free anomeric –OH</em>. Do not reduce Benedict's reagent. Do not show mutarotation. Example: Sucrose (α-1,β-2 linkage).
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q4.</span>
+      <span class="q-text">Explain pyranose and furanose rings.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>When monosaccharides cyclize via intramolecular hemiacetal formation, they form ring structures named after oxygen-containing heterocycles:</p>
+      <div class="highlight">
+        <strong>Pyranose:</strong> <em>6-membered ring</em> (like pyran) — C-1 aldehyde reacts with C-5 –OH. Glucose predominantly exists as α/β-D-glucopyranose. More stable due to chair conformation.<br><br>
+        <strong>Furanose:</strong> <em>5-membered ring</em> (like furan) — C-1 aldehyde reacts with C-4 –OH (or C-2 ketone with C-5 –OH). Fructose in solution exists as furanose (β-D-fructofuranose). Less stable but found in nucleotides (ribose, deoxyribose).
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q5.</span>
+      <span class="q-text">Fate of pyruvate in aerobic and anaerobic conditions.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <div class="highlight">
+        <strong>Aerobic conditions (O₂ present):</strong><br>
+        Pyruvate → Acetyl-CoA (by pyruvate dehydrogenase complex, mitochondria) → TCA cycle → CO₂ + H₂O + 36–38 ATP total<br><br>
+        <strong>Anaerobic conditions (no O₂):</strong><br>
+        • In muscle/RBC: Pyruvate → Lactate (by lactate dehydrogenase; regenerates NAD⁺) — Lactic acid fermentation<br>
+        • In yeast: Pyruvate → Acetaldehyde → Ethanol (by pyruvate decarboxylase + alcohol dehydrogenase) — Alcoholic fermentation
+      </div>
+      <p>Anaerobic metabolism regenerates NAD⁺ to sustain glycolysis but yields only <strong>2 ATP net</strong> (vs ~36–38 aerobically).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q6.</span>
+      <span class="q-text">Short note on Pentose Phosphate Pathway (PPP).</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p>The <strong>Pentose Phosphate Pathway (PPP)</strong> (hexose monophosphate shunt) occurs in the <strong>cytosol</strong> and has two phases:</p>
+      <ul>
+        <li><strong>Oxidative phase:</strong> Glucose-6-phosphate → Ribulose-5-phosphate + 2 NADPH + CO₂ (via G6PD, the key enzyme)</li>
+        <li><strong>Non-oxidative phase:</strong> Interconversion of phosphorylated sugars (C3–C7) via transketolase and transaldolase</li>
+      </ul>
+      <p><strong>Functions:</strong> Produces NADPH (for fatty acid synthesis, glutathione reduction, ROS defense) and ribose-5-phosphate (for nucleotide biosynthesis). Active in liver, adrenal cortex, RBCs, and lactating mammary gland.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q7.</span>
+      <span class="q-text">Differentiate glycolysis and gluconeogenesis.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <div class="highlight">
+        <strong>Glycolysis:</strong> Glucose → 2 Pyruvate | Cytosol of all cells | Net yield: 2 ATP, 2 NADH | Activated by insulin/AMP | Key enzymes: Hexokinase, PFK-1, Pyruvate kinase<br><br>
+        <strong>Gluconeogenesis:</strong> Pyruvate/Lactate/Amino acids → Glucose | Liver and kidney cortex | Consumes 6 ATP equivalents | Activated by glucagon/cortisol | Key bypass enzymes: Pyruvate carboxylase, PEPCK, Fructose-1,6-bisphosphatase, Glucose-6-phosphatase
+      </div>
+      <p>They are reciprocally regulated — when glycolysis is active, gluconeogenesis is suppressed, and vice versa (via fructose-2,6-bisphosphate as key regulator).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q8.</span>
+      <span class="q-text">Explain glycogen synthesis and glycogenolysis.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>Glycogen Synthesis (Glycogenesis):</strong> Glucose → Glucose-6-P → Glucose-1-P → UDP-Glucose (activated by UTP). <em>Glycogen synthase</em> adds glucose via α-1,4 bonds to the growing chain. <em>Branching enzyme</em> creates α-1,6 branches every 8–12 residues. Stimulated by <strong>insulin</strong>.</p>
+      <p><strong>Glycogenolysis:</strong> <em>Glycogen phosphorylase</em> cleaves α-1,4 bonds (phosphorolysis) → Glucose-1-phosphate. <em>Debranching enzyme</em> removes α-1,6 branch points → free glucose. Stimulated by <strong>glucagon (liver)</strong> and <strong>adrenaline (muscle/liver)</strong>.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q9.</span>
+      <span class="q-text">Classify amino acids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>Based on the <strong>R group (side chain)</strong> properties:</p>
+      <ul>
+        <li><strong>Nonpolar, aliphatic:</strong> Gly, Ala, Val, Leu, Ile, Pro, Met</li>
+        <li><strong>Aromatic:</strong> Phe, Tyr, Trp (absorb UV at 280 nm)</li>
+        <li><strong>Polar, uncharged:</strong> Ser, Thr, Cys, Asn, Gln</li>
+        <li><strong>Positively charged (basic):</strong> Lys, Arg, His (pI > 7)</li>
+        <li><strong>Negatively charged (acidic):</strong> Asp, Glu (pI &lt; 7)</li>
+      </ul>
+      <p>Also classified as <strong>essential</strong> (cannot be synthesized by body, must be obtained from diet — 9 in adults: His, Ile, Leu, Lys, Met, Phe, Thr, Trp, Val) vs. <strong>non-essential</strong>.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q10.</span>
+      <span class="q-text">Explain peptide bond formation.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>Peptide bond formation is a <strong>condensation (dehydration) reaction</strong> catalyzed by <em>ribosomes</em> (peptidyl transferase, 23S rRNA) during translation:</p>
+      <div class="formula">
+        –COOH (amino acid 1) + H₂N– (amino acid 2)
+        → –CO–NH– (peptide bond) + H₂O
+      </div>
+      <p>The resulting peptide bond has <strong>~40% double-bond character</strong> due to resonance delocalization of nitrogen's lone pair into the carbonyl, making it <strong>planar and rigid</strong> (6 atoms in one plane). Rotation is possible around Cα–N (φ angle) and Cα–C (ψ angle), but NOT around the C–N bond itself.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q11.</span>
+      <span class="q-text">Differentiate fats and oils.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-lipid">Lipids</span>
+      <div class="highlight">
+        <strong>Fats:</strong> Triacylglycerols derived mostly from <em>saturated</em> fatty acids. Solid at room temperature (20–25°C). Animal sources (butter, lard, tallow). High melting point due to tight packing of saturated chains. Examples: Tripalmitin, Tristearin.<br><br>
+        <strong>Oils:</strong> Triacylglycerols derived mostly from <em>unsaturated</em> fatty acids. Liquid at room temperature. Plant and fish sources (olive, sunflower, cod liver oil). Low melting point due to kinks from cis double bonds preventing close packing. Examples: Triolein, Trilinolein.
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q12.</span>
+      <span class="q-text">Nucleoside vs nucleotide.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <div class="highlight">
+        <strong>Nucleoside:</strong> Nitrogenous base + Pentose sugar (ribose or deoxyribose) linked by N-glycosidic bond. <em>No phosphate</em>. Examples: Adenosine (A + ribose), Thymidine (T + deoxyribose).<br><br>
+        <strong>Nucleotide:</strong> Nucleoside + 1, 2, or 3 phosphate group(s) esterified at 5'-OH of the sugar. <em>Has phosphate</em>. Examples: AMP, ADP, ATP; dATP (for DNA). Nucleotides are the monomeric building blocks of nucleic acids.
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q13.</span>
+      <span class="q-text">Explain enzyme classification.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-enz">Enzymes</span>
+      <p>IUB (International Union of Biochemistry) classifies enzymes into <strong>6 major classes</strong> by reaction type:</p>
+      <ul>
+        <li><strong>1. Oxidoreductases:</strong> Oxidation-reduction (e.g., LDH, cytochrome oxidase)</li>
+        <li><strong>2. Transferases:</strong> Transfer of functional groups (e.g., kinases, transaminases)</li>
+        <li><strong>3. Hydrolases:</strong> Hydrolysis reactions (e.g., protease, lipase, amylase)</li>
+        <li><strong>4. Lyases:</strong> Non-hydrolytic addition/removal (e.g., aldolase, decarboxylase)</li>
+        <li><strong>5. Isomerases:</strong> Isomerization (e.g., phosphoglucose isomerase, mutarotase)</li>
+        <li><strong>6. Ligases (Synthetases):</strong> Bond formation using ATP (e.g., DNA ligase, Acetyl-CoA carboxylase)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q14.</span>
+      <span class="q-text">Short note on coenzymes and cofactors.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-enz">Enzymes</span>
+      <p><strong>Cofactors:</strong> Non-protein helpers required for enzyme activity. Types:</p>
+      <ul>
+        <li><strong>Metal ion cofactors:</strong> Tightly/firmly bound. Zn²⁺ (carbonic anhydrase), Mg²⁺ (kinases, ATPases), Fe²⁺/Fe³⁺ (cytochromes), Cu²⁺ (cytochrome oxidase)</li>
+        <li><strong>Coenzymes:</strong> Organic molecules, loosely bound (dissociable). Act as group carriers: NAD⁺/NADP⁺ (carry H⁺/electrons), FAD/FMN (carry H atoms), CoA (carry acyl groups), TPP (carry aldehyde), PLP (carry amino groups), Biotin (carry CO₂)</li>
+      </ul>
+      <p>Most coenzymes are derived from <strong>B-vitamins</strong>: NAD⁺ ← Niacin (B3); FAD ← Riboflavin (B2); CoA ← Pantothenic acid (B5); TPP ← Thiamine (B1).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q15.</span>
+      <span class="q-text">Explain structure of RNA.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <p>RNA is a <strong>single-stranded</strong> polynucleotide consisting of ribonucleotides linked by 3'→5' phosphodiester bonds. Components: Ribose sugar + Bases (A, G, C, U — Uracil instead of Thymine) + Phosphate.</p>
+      <p><strong>Types of RNA:</strong></p>
+      <ul>
+        <li><strong>mRNA</strong> (messenger): Carries genetic info from DNA to ribosome; contains codons; most labile</li>
+        <li><strong>tRNA</strong> (transfer): Cloverleaf structure; anticodon loop; carries amino acids; ~70–90 nt</li>
+        <li><strong>rRNA</strong> (ribosomal): Most abundant; component of ribosomes (28S, 18S, 5.8S, 5S in eukaryotes); catalytic (ribozyme activity in peptidyl transferase)</li>
+        <li><strong>snRNA, miRNA, siRNA:</strong> Gene regulation</li>
+      </ul>
+      <p>RNA can fold back on itself forming <strong>stem-loop/hairpin structures</strong> via intramolecular base pairing.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q16.</span>
+      <span class="q-text">Short note on glycolipids and sphingolipids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-lipid">Lipids</span>
+      <p><strong>Glycolipids:</strong> Lipids with one or more sugar residues linked to the lipid backbone by a glycosidic bond. Found in the outer leaflet of plasma membranes. Functions: Cell recognition, ABO blood group antigens, cell-cell adhesion. Examples: Cerebrosides, Gangliosides.</p>
+      <p><strong>Sphingolipids:</strong> Lipids built on a <strong>sphingosine</strong> (amino alcohol) backbone instead of glycerol. Sphingosine + fatty acid = Ceramide (the basic unit). Subclasses:</p>
+      <ul>
+        <li><em>Sphingomyelin:</em> Ceramide + Phosphocholine (myelin sheaths, neuronal membranes)</li>
+        <li><em>Cerebrosides:</em> Ceramide + one sugar (glucose or galactose)</li>
+        <li><em>Gangliosides:</em> Ceramide + oligosaccharide containing sialic acid (brain function, nervous system)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 5 MARK ===== -->
+<div class="section" id="five">
+  <div class="section-header">
+    <div class="section-title">5 Mark Answers</div>
+    <div class="section-subtitle">Detailed explanations with mechanisms and diagrams described</div>
+  </div>
+  <button class="expand-all-btn" onclick="expandAll('five')">⊕ Expand All</button>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q1.</span>
+      <span class="q-text">Explain structure of carbohydrates.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>Carbohydrates (general formula: Cₙ(H₂O)ₙ) are classified by structure and size:</p>
+      <p><strong>1. Monosaccharides:</strong> Simplest sugars; cannot be hydrolyzed further. Classified by:</p>
+      <ul>
+        <li>Number of carbons: Triose (3C), Tetrose (4C), Pentose (5C), Hexose (6C), Heptose (7C)</li>
+        <li>Carbonyl type: Aldoses (–CHO at C-1) vs Ketoses (C=O at C-2)</li>
+        <li>Stereochemistry: D-/L-series based on configuration at the penultimate carbon relative to glyceraldehyde</li>
+      </ul>
+      <p>Key monosaccharides: Glucose, Galactose (hexose/aldose); Fructose (hexose/ketose); Ribose, Deoxyribose (pentoses in nucleic acids).</p>
+      <p><strong>2. Open-chain vs Ring forms:</strong> In solution, pentoses and hexoses cyclize to form pyranose (6-membered) or furanose (5-membered) rings via hemiacetal formation. This creates a new chiral center — the <strong>anomeric carbon</strong> — giving α (–OH axial/same side as ring O) and β (–OH equatorial) anomers. Glucose predominantly adopts the chair conformation of β-D-glucopyranose (most stable, all bulky groups equatorial).</p>
+      <p><strong>3. Oligosaccharides:</strong> 2–10 monosaccharides linked by glycosidic bonds. Disaccharides: Sucrose (Glc-α1,β2-Fru), Lactose (Gal-β1,4-Glc), Maltose (Glc-α1,4-Glc), Cellobiose (Glc-β1,4-Glc).</p>
+      <p><strong>4. Polysaccharides:</strong> &gt;10 monosaccharides. Homopolysaccharides: Starch (amylose + amylopectin), Glycogen, Cellulose, Chitin. Heteropolysaccharides: Hyaluronic acid, Heparin, Chondroitin sulfate.</p>
+      <p><strong>Fischer projections</strong> depict the open-chain form; <strong>Haworth projections</strong> depict the ring form with substituents above (L-configuration/β) and below (D-configuration/α) the ring.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q2.</span>
+      <span class="q-text">Describe Haworth structure of glucose.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p>The <strong>Haworth projection</strong> represents the cyclic (ring) form of glucose viewed edge-on as a flat hexagonal ring (pyranose).</p>
+      <p><strong>Formation:</strong> The –OH at C-5 attacks the aldehyde at C-1 forming an intramolecular hemiacetal. The ring contains 5 carbons + 1 oxygen (pyran ring). This generates the anomeric C-1.</p>
+      <p><strong>Rules for Haworth projection from Fischer projection:</strong></p>
+      <ul>
+        <li>Groups on the <em>right</em> in Fischer → <em>below</em> the ring plane in Haworth</li>
+        <li>Groups on the <em>left</em> in Fischer → <em>above</em> the ring plane</li>
+        <li>The terminal –CH₂OH is above the ring (for D-sugars)</li>
+        <li>Ring oxygen bridges C-1 and C-5</li>
+      </ul>
+      <p><strong>α-D-Glucopyranose:</strong> –OH at C-1 is <em>below</em> the ring (trans to –CH₂OH at C-5). [α]D = +112.2°</p>
+      <p><strong>β-D-Glucopyranose:</strong> –OH at C-1 is <em>above</em> the ring (cis to –CH₂OH). [α]D = +18.7°. This is the more stable and abundant form in solution (~64%).</p>
+      <div class="formula">
+        Substituent arrangement in β-D-glucopyranose (Haworth):
+        C-1: –OH below (α) or above (β)
+        C-2: –OH below | C-3: –OH above
+        C-4: –OH below | C-5: –CH₂OH above
+        All groups at C-2,3,4 are –OH (equatorial in chair form of β anomer)
+      </div>
+      <p>The <strong>chair conformation</strong> (⁴C₁) is more accurate — in β-D-glucose, all substituents are equatorial, making it the most stable configuration.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q3.</span>
+      <span class="q-text">Explain oligosaccharides and polysaccharides.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p><strong>Oligosaccharides (2–10 monosaccharide units):</strong></p>
+      <p>Formed by glycosidic bonds between the anomeric –OH of one sugar and any –OH of another (with loss of H₂O). Named by anomeric configuration (α/β), carbon positions involved, and component sugars.</p>
+      <ul>
+        <li><strong>Sucrose</strong> (α-D-Glc-1,2-β-D-Fru): Table sugar; non-reducing; both anomeric carbons involved; hydrolyzed by sucrase/invertase</li>
+        <li><strong>Lactose</strong> (β-D-Gal-1,4-D-Glc): Milk sugar; reducing sugar; hydrolyzed by lactase; deficiency causes lactose intolerance</li>
+        <li><strong>Maltose</strong> (α-D-Glc-1,4-D-Glc): Malt sugar; reducing; product of starch hydrolysis</li>
+        <li><strong>Trehalose</strong> (α-D-Glc-1,1-α-D-Glc): Insect blood sugar; non-reducing</li>
+      </ul>
+      <p><strong>Polysaccharides (&gt;10 units, usually thousands):</strong></p>
+      <p><em>Homopolysaccharides (one type of monomer):</em></p>
+      <ul>
+        <li><strong>Starch:</strong> Storage in plants. Amylose (unbranched α-1,4 chains, ~20%) + Amylopectin (branched α-1,4 with α-1,6 branches every 24–30 residues, ~80%). Gives blue-black color with iodine.</li>
+        <li><strong>Glycogen:</strong> Animal storage polysaccharide (liver, muscle). Like amylopectin but more branched (every 8–12 residues), highly compact.</li>
+        <li><strong>Cellulose:</strong> Structural in plant cell walls. β-1,4-Glucose. Straight, hydrogen-bonded sheets. Not digestible by humans (no cellulase).</li>
+        <li><strong>Chitin:</strong> β-1,4-linked N-acetylglucosamine. Structural in insect exoskeletons and fungal cell walls.</li>
+      </ul>
+      <p><em>Heteropolysaccharides (mixed monomers):</em></p>
+      <ul>
+        <li><strong>Hyaluronic acid:</strong> GlcUA + GlcNAc; joint lubrication</li>
+        <li><strong>Heparin:</strong> Anticoagulant; GlcUA + GlcNAc (sulfated)</li>
+        <li><strong>Chondroitin sulfate:</strong> Cartilage; GlcUA + GalNAc</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q4.</span>
+      <span class="q-text">Explain glycolysis pathway.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p>Glycolysis converts 1 glucose → 2 pyruvate in 10 steps (cytosol). Two phases:</p>
+      <p><strong>Phase I — Energy Investment (Steps 1–5, consumes 2 ATP):</strong></p>
+      <ul>
+        <li>Step 1: Glucose + ATP → Glucose-6-P (Hexokinase; irreversible; inhibited by G-6-P)</li>
+        <li>Step 2: Glucose-6-P → Fructose-6-P (Phosphoglucose isomerase)</li>
+        <li>Step 3: Fructose-6-P + ATP → Fructose-1,6-bisP (PFK-1; rate-limiting, irreversible; activated by AMP/ADP/F-2,6-bisP; inhibited by ATP/citrate)</li>
+        <li>Step 4: Fructose-1,6-bisP → DHAP + Glyceraldehyde-3-P (Aldolase)</li>
+        <li>Step 5: DHAP → G-3-P (Triose phosphate isomerase) — now 2× G-3-P proceed</li>
+      </ul>
+      <p><strong>Phase II — Energy Recovery (Steps 6–10, generates 4 ATP + 2 NADH):</strong></p>
+      <ul>
+        <li>Step 6: G-3-P + NAD⁺ + Pi → 1,3-bisphosphoglycerate + NADH (G-3-P dehydrogenase)</li>
+        <li>Step 7: 1,3-bisP-glycerate + ADP → 3-Phosphoglycerate + ATP (Phosphoglycerate kinase; substrate-level phosphorylation)</li>
+        <li>Step 8: 3-PG → 2-PG (Phosphoglycerate mutase)</li>
+        <li>Step 9: 2-PG → PEP + H₂O (Enolase; inhibited by fluoride)</li>
+        <li>Step 10: PEP + ADP → Pyruvate + ATP (Pyruvate kinase; irreversible; activated by F-1,6-bisP; inhibited by ATP/alanine)</li>
+      </ul>
+      <div class="highlight">
+        <strong>Net yield per glucose:</strong> 2 Pyruvate + 2 ATP (net) + 2 NADH + 2 H₂O<br>
+        Irreversible steps (regulatory): Steps 1, 3, 10
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q5.</span>
+      <span class="q-text">Describe TCA cycle.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p>The <strong>TCA (Krebs/Citric Acid) cycle</strong> occurs in the mitochondrial matrix. Acetyl-CoA (2C) condenses with Oxaloacetate (4C) → Citrate (6C) → ... → Oxaloacetate (regenerated).</p>
+      <p><strong>8 Steps:</strong></p>
+      <ul>
+        <li><strong>1.</strong> Oxaloacetate + Acetyl-CoA → Citrate (Citrate synthase; condenses)</li>
+        <li><strong>2.</strong> Citrate → Isocitrate (Aconitase; via cis-aconitate)</li>
+        <li><strong>3.</strong> Isocitrate → α-Ketoglutarate + CO₂ + NADH (Isocitrate dehydrogenase; <em>rate-limiting</em>; activated by ADP/Ca²⁺; inhibited by NADH/ATP)</li>
+        <li><strong>4.</strong> α-Ketoglutarate → Succinyl-CoA + CO₂ + NADH (α-KG dehydrogenase complex; like PDH)</li>
+        <li><strong>5.</strong> Succinyl-CoA → Succinate + GTP (Succinyl-CoA synthetase; substrate-level phosphorylation)</li>
+        <li><strong>6.</strong> Succinate → Fumarate + FADH₂ (Succinate dehydrogenase; in inner membrane, Complex II)</li>
+        <li><strong>7.</strong> Fumarate → Malate (Fumarase; hydration)</li>
+        <li><strong>8.</strong> Malate → Oxaloacetate + NADH (Malate dehydrogenase; regenerates OAA)</li>
+      </ul>
+      <div class="highlight">
+        <strong>Per turn of TCA (1 Acetyl-CoA):</strong><br>
+        2 CO₂, 3 NADH, 1 FADH₂, 1 GTP<br>
+        Per glucose (2 Acetyl-CoA): 4 CO₂, 6 NADH, 2 FADH₂, 2 GTP
+      </div>
+      <p><strong>Amphibolic role:</strong> TCA provides intermediates for biosynthesis (α-KG → Glu; OAA → Asp; succinyl-CoA → heme).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q6.</span>
+      <span class="q-text">Explain electron transport chain (ETC).</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p>The <strong>ETC (respiratory chain)</strong> is located on the <strong>inner mitochondrial membrane (IMM)</strong> and consists of 4 protein complexes and 2 mobile electron carriers:</p>
+      <ul>
+        <li><strong>Complex I</strong> (NADH dehydrogenase/ubiquinone oxidoreductase): NADH → NAD⁺ + 2e⁻; pumps 4 H⁺ to IMS; contains FMN and Fe-S clusters</li>
+        <li><strong>Ubiquinone (CoQ/Q):</strong> Lipid-soluble mobile carrier; shuttles electrons from Complex I and II to Complex III</li>
+        <li><strong>Complex II</strong> (Succinate dehydrogenase): FADH₂ → FAD; passes electrons to CoQ; does <em>not</em> pump H⁺</li>
+        <li><strong>Complex III</strong> (Cytochrome bc₁): CoQH₂ → Cytochrome c; pumps 4 H⁺; Q-cycle mechanism; contains Cyt b, Cyt c₁, Fe-S protein</li>
+        <li><strong>Cytochrome c:</strong> Water-soluble; mobile; shuttles electrons from III to IV</li>
+        <li><strong>Complex IV</strong> (Cytochrome c oxidase): Cytochrome c → O₂ → H₂O; final acceptor; pumps 2 H⁺; contains Cyt a, Cyt a₃, Cu</li>
+      </ul>
+      <div class="highlight">
+        H⁺ pumped per NADH: 10 H⁺ (4+0+4+2); yields ~2.5 ATP<br>
+        H⁺ pumped per FADH₂: 6 H⁺ (0+4+2); yields ~1.5 ATP<br>
+        P/O ratio: NADH ≈ 2.5; FADH₂ ≈ 1.5
+      </div>
+      <p>Inhibitors: Rotenone (Complex I), Antimycin A (Complex III), Cyanide/CO/azide (Complex IV). Uncouplers (e.g., DNP, thermogenin): dissipate proton gradient as heat without ATP synthesis.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q7.</span>
+      <span class="q-text">Explain classification of amino acids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p>Amino acids are classified by <strong>R-group (side chain)</strong> chemical properties:</p>
+      <p><strong>1. Nonpolar, Aliphatic (7):</strong> Gly (no chiral C), Ala, Val, Leu, Ile (branched chain), Pro (secondary amine/imino acid; disrupts helices), Met (sulfur-containing). Hydrophobic interior.</p>
+      <p><strong>2. Aromatic (3):</strong> Phe (hydrophobic), Tyr (–OH; can be phosphorylated), Trp (indole ring; largest; precursor to serotonin). All absorb UV at ~280 nm (Tyr + Trp mainly).</p>
+      <p><strong>3. Polar, Uncharged (5):</strong> Ser (–CH₂OH; phosphorylated), Thr (–CHOH–CH₃), Cys (–CH₂SH; forms disulfide bridges), Asn (amide), Gln (amide). Form H-bonds.</p>
+      <p><strong>4. Positively Charged / Basic (3):</strong> Lys (ε-NH₂; pKR ≈ 10.5), Arg (guanidinium; pKR ≈ 12.5; most basic), His (imidazole; pKR ≈ 6.0; acts as acid-base catalyst at physiological pH — unique!). pI &gt; 7.</p>
+      <p><strong>5. Negatively Charged / Acidic (2):</strong> Asp (pKR ≈ 3.9), Glu (pKR ≈ 4.1). Their amide forms are Asn and Gln. pI &lt; 7.</p>
+      <p><strong>Additional classifications:</strong></p>
+      <ul>
+        <li>Essential (9): His, Ile, Leu, Lys, Met, Phe, Thr, Trp, Val</li>
+        <li>Glucogenic (yield glucose precursors) vs Ketogenic (yield acetyl-CoA/ketone bodies)</li>
+        <li>Sulfur-containing: Cys, Met | Imino acid: Pro</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q8.</span>
+      <span class="q-text">Describe levels of protein structure.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p><strong>1° Primary Structure:</strong> Linear sequence of amino acids joined by peptide bonds. Determined by DNA. All higher structures depend on it. Example: Ribonuclease A (124 AA). Error → disease (Sickle Cell Anemia: Glu→Val at position 6 of β-globin).</p>
+      <p><strong>2° Secondary Structure:</strong> Local regular folding patterns stabilized by <em>backbone H-bonds</em> (N–H···O=C).</p>
+      <ul>
+        <li><strong>α-Helix:</strong> Right-handed; 3.6 AA/turn; pitch 5.4 Å; H-bond between residue i and i+4; side chains point outward. Stabilized by Pro disruption (kink).</li>
+        <li><strong>β-Sheet:</strong> Extended chains (strands) running parallel or antiparallel; H-bonds between adjacent strands; side chains alternate above/below sheet. β-barrel formed by multiple sheets.</li>
+        <li><strong>β-turns:</strong> Connect β-strands; 4 residue motif; Pro and Gly often present</li>
+        <li><strong>Random coil:</strong> No regular repeating structure</li>
+      </ul>
+      <p><strong>3° Tertiary Structure:</strong> Overall 3D folding of a single polypeptide chain. Stabilized by: disulfide bonds (–S–S–), hydrophobic interactions, ionic bonds (salt bridges), H-bonds, van der Waals forces. Hydrophobic R groups cluster in interior; hydrophilic on surface. Determines the protein's active site and function.</p>
+      <p><strong>4° Quaternary Structure:</strong> Assembly of two or more polypeptide subunits (protomers). Stabilized by same forces as 3° (except no new covalent bonds typically). Example: Hemoglobin (2α + 2β subunits); DNA polymerase; ATP synthase. Not all proteins have quaternary structure.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q9.</span>
+      <span class="q-text">Explain structure and classification of lipids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-lipid">Lipids</span>
+      <p>Lipids are classified into <strong>simple, complex, and derived lipids</strong>:</p>
+      <p><strong>1. Simple Lipids (esters of fatty acids with alcohol):</strong></p>
+      <ul>
+        <li><em>Triacylglycerols (Triglycerides):</em> Glycerol + 3 fatty acids (ester bonds). Storage form. Yield 9 kcal/g. Saponified to glycerol + soap (fatty acid salts).</li>
+        <li><em>Waxes:</em> Long-chain fatty acid + long-chain monohydroxy alcohol. Waterproofing (plant cuticles, ear wax, beeswax).</li>
+      </ul>
+      <p><strong>2. Complex Lipids (contain additional groups):</strong></p>
+      <ul>
+        <li><em>Phospholipids:</em> Glycerol + 2 fatty acids + phosphate + polar head group. Amphipathic; major membrane lipid. Types: Phosphatidylcholine (lecithin), Phosphatidylethanolamine (cephalin), Phosphatidylserine, Phosphatidylinositol (signaling).</li>
+        <li><em>Sphingolipids:</em> Sphingosine backbone. Ceramide → Sphingomyelin, Cerebrosides, Gangliosides. Rich in nerve tissue.</li>
+        <li><em>Glycolipids:</em> Lipid + sugar moiety. Cell recognition, blood groups.</li>
+      </ul>
+      <p><strong>3. Derived Lipids:</strong></p>
+      <ul>
+        <li><em>Sterols:</em> Cholesterol (membrane rigidity; precursor to steroid hormones, bile acids, Vit D). 4-ring cyclopentanoperhydrophenanthrene nucleus.</li>
+        <li><em>Fat-soluble vitamins:</em> A, D, E, K</li>
+        <li><em>Eicosanoids:</em> Prostaglandins, thromboxanes, leukotrienes (from arachidonic acid; local signaling)</li>
+      </ul>
+      <p><strong>Fatty acid structure:</strong> CH₃–(CH₂)ₙ–COOH. Saturated (no double bonds; solid, high Tm). Unsaturated: monounsaturated (1 db; oleic acid, 18:1Δ9); polyunsaturated (PUFA; linoleic 18:2Δ9,12; arachidonic 20:4). Cis double bonds introduce kinks, lowering melting point.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q10.</span>
+      <span class="q-text">Describe structure of nucleic acids (DNA and RNA).</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <p><strong>Building blocks (nucleotides):</strong> Phosphate + Pentose sugar + Nitrogenous base. Linked by 3'→5' phosphodiester bonds (between 3'-OH of one nucleotide and 5'-phosphate of next).</p>
+      <p><strong>Nitrogenous bases:</strong> Purines (Adenine, Guanine — double ring) and Pyrimidines (Cytosine, Thymine [DNA], Uracil [RNA] — single ring).</p>
+      <p><strong>DNA Structure (Watson & Crick, 1953):</strong></p>
+      <ul>
+        <li>Double helix: Two antiparallel strands (5'→3' and 3'→5')</li>
+        <li>Base pairing (Chargaff's rules): A=T (2 H-bonds), G≡C (3 H-bonds); A+G = T+C</li>
+        <li>B-form (physiological): Right-handed, 10 bp/turn, pitch 34 Å, diameter 20 Å</li>
+        <li>Major groove (wider) and minor groove (narrower)</li>
+        <li>Backbone: deoxyribose-phosphate (on outside); bases (inside, stacked)</li>
+        <li>Stabilization: H-bonds (base pairs) + base-stacking (van der Waals/hydrophobic)</li>
+        <li>Sugar: 2'-deoxyribose; Bases: A, T, G, C</li>
+      </ul>
+      <p><strong>RNA Structure:</strong></p>
+      <ul>
+        <li>Single-stranded; Sugar: ribose; Bases: A, U, G, C</li>
+        <li>Can fold to form hairpins/stem-loops (intramolecular base pairing)</li>
+        <li>Less stable than DNA (2'-OH makes RNA more reactive/labile)</li>
+        <li>Types: mRNA (codons), tRNA (cloverleaf; anticodon), rRNA (ribozyme activity)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 8 MARK ===== -->
+<div class="section" id="eight">
+  <div class="section-header">
+    <div class="section-title">8 Mark Answers</div>
+    <div class="section-subtitle">Comprehensive essays covering mechanism, regulation, and clinical significance</div>
+  </div>
+  <button class="expand-all-btn" onclick="expandAll('eight')">⊕ Expand All</button>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q1.</span>
+      <span class="q-text">Explain classification and structure of carbohydrates including mutarotation and ring forms.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-carb">Carbohydrates</span>
+      <p><strong>I. Definition and General Formula</strong></p>
+      <p>Carbohydrates are polyhydroxy aldehydes/ketones or their derivatives, with empirical formula (CH₂O)ₙ. They constitute ~80% of the dry weight of plants and are the primary energy source in living systems.</p>
+      <p><strong>II. Classification</strong></p>
+      <p><em>A. Monosaccharides:</em> Cannot be hydrolyzed. Classified by: (1) Carbon number — triose, tetrose, pentose, hexose, heptose; (2) Carbonyl type — aldoses (CHO) vs ketoses (C=O). Key examples: D-Glucose (aldohexose), D-Fructose (ketohexose), D-Ribose (aldopentose), D-Galactose (aldohexose).</p>
+      <p>Stereochemistry: The D/L designation is determined by the configuration of the chiral carbon farthest from the carbonyl, compared to D- and L-glyceraldehyde. All amino acids in proteins are L; most natural sugars are D. Aldohexoses have 4 chiral carbons → 2⁴ = 16 stereoisomers (8 D + 8 L pairs).</p>
+      <p><em>B. Oligosaccharides (2–10 units):</em> Disaccharides — Sucrose (α-Glc-1,2-β-Fru; non-reducing), Lactose (β-Gal-1,4-Glc; reducing), Maltose (α-Glc-1,4-Glc; reducing), Cellobiose (β-Glc-1,4-Glc). Trisaccharides — Raffinose. Cyclodextrins (6-8 glucose units in cyclic form).</p>
+      <p><em>C. Polysaccharides (&gt;10 units):</em> Homopolysaccharides: Starch (amylose: α-1,4; amylopectin: α-1,4 + α-1,6 branches every 24–30), Glycogen (α-1,4 + α-1,6 every 8–12; most branched), Cellulose (β-1,4-Glc; structural), Inulin (β-2,1-Fru; dietary fiber), Chitin (β-1,4-GlcNAc). Heteropolysaccharides: Hyaluronic acid, Heparin, Dermatan sulfate, Keratan sulfate, Chondroitin sulfate (glycosaminoglycans).</p>
+      <p><strong>III. Ring Forms (Cyclization)</strong></p>
+      <p>In aqueous solution, hexoses and pentoses undergo intramolecular nucleophilic addition:</p>
+      <ul>
+        <li>C-5 –OH attacks C-1 aldehyde → 6-membered <strong>pyranose ring</strong> (resembles pyran). Most common for glucose, galactose, mannose.</li>
+        <li>C-4 –OH attacks C-1 aldehyde → 5-membered <strong>furanose ring</strong> (resembles furan). Common for ribose, fructose.</li>
+      </ul>
+      <p>The Haworth projection: groups on the right in Fischer → below the ring; groups on the left → above. The –CH₂OH (C-6 in hexose) is above. The anomeric –OH at C-1: <strong>α</strong> = same side as ring oxygen (below in D-hexoses); <strong>β</strong> = opposite (above in D-hexoses).</p>
+      <p>The <strong>chair conformation</strong> (⁴C₁) is most accurate for glucose: β-D-glucopyranose has all substituents equatorial — most stable form. Galactose has C-4 –OH axial (less stable).</p>
+      <p><strong>IV. Mutarotation</strong></p>
+      <p>The α and β anomers interconvert in solution via the open-chain form:</p>
+      <div class="formula">
+        α-D-Glucopyranose ([α]D +112°) ⇌ Open-chain ⇌ β-D-Glucopyranose ([α]D +18.7°)
+        Equilibrium [α]D = +52.7° (36% α : 64% β at 25°C)
+      </div>
+      <p>Mechanism: Ring opens by breakage of the hemiacetal bond; open-chain form rotates; ring closes to give either anomer. Rate increased by acid, base, or enzyme <em>aldose-1-epimerase (mutarotase)</em>. All reducing sugars exhibit mutarotation. Optical rotation change with time was first observed by Dubrunfaut (1846) for glucose.</p>
+      <p><strong>V. Glycosidic Bonds and Disaccharides</strong></p>
+      <p>The anomeric –OH reacts with an –OH of another sugar (or alcohol) → <strong>O-glycosidic bond</strong> (+ H₂O lost). Once glycoside is formed, mutarotation at that carbon stops. If both anomeric carbons are linked (as in sucrose), the sugar is <strong>non-reducing</strong>; if only one is linked, the free anomeric –OH retains reducing power.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q2.</span>
+      <span class="q-text">Describe glycolysis with energetics, regulation, and fate of pyruvate.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>I. Overview</strong></p>
+      <p>Glycolysis (Embden–Meyerhof–Parnas pathway) is the universal, oxygen-independent degradation of glucose (6C) to pyruvate (3C). Occurs in the cytosol of all living cells. 10 enzymatic steps.</p>
+      <p><strong>II. Steps and Enzymes</strong></p>
+      <p><em>Preparatory Phase (ATP Investment):</em></p>
+      <ul>
+        <li>1. Glucose + ATP → Glucose-6-P + ADP [Hexokinase/Glucokinase; irreversible; HK inhibited by G-6-P; GK not inhibited — liver sensor]</li>
+        <li>2. G-6-P → Fructose-6-P [Phosphoglucose isomerase; aldose-ketose isomerization]</li>
+        <li>3. F-6-P + ATP → F-1,6-bisP + ADP [PFK-1; committed, rate-limiting step; + AMP, ADP, F-2,6-bisP; − ATP, citrate, H⁺]</li>
+        <li>4. F-1,6-bisP → DHAP + G-3-P [Aldolase; class I in animals — Schiff base mechanism]</li>
+        <li>5. DHAP → G-3-P [Triose phosphate isomerase; nearly equilibrium]</li>
+      </ul>
+      <p><em>Payoff Phase (ATP Recovery, ×2 for each G-3-P):</em></p>
+      <ul>
+        <li>6. G-3-P + NAD⁺ + Pi → 1,3-BPG + NADH [G-3-P dehydrogenase; inhibited by iodoacetate; sulfhydryl enzyme]</li>
+        <li>7. 1,3-BPG + ADP → 3-PG + ATP [Phosphoglycerate kinase; substrate-level phosphorylation; first ATP-generating step]</li>
+        <li>8. 3-PG → 2-PG [Phosphoglycerate mutase; 2,3-BPG cofactor]</li>
+        <li>9. 2-PG → PEP + H₂O [Enolase; Mg²⁺ required; inhibited by fluoride (F⁻) — used in dental caries prevention]</li>
+        <li>10. PEP + ADP → Pyruvate + ATP [Pyruvate kinase; irreversible; activated by F-1,6-bisP (feedforward); inhibited by ATP, alanine, glucagon (phosphorylation)]</li>
+      </ul>
+      <p><strong>III. Energetics</strong></p>
+      <div class="formula">
+        Input: 2 ATP (steps 1, 3)
+        Output: 4 ATP (steps 7, 10) + 2 NADH (step 6) + 2 H₂O
+        Net: 2 ATP + 2 NADH + 2 Pyruvate
+        Aerobically: 2 NADH (cytosolic) yield ~3–5 ATP via malate-aspartate or glycerol-3-P shuttle
+        ΔG°' overall ≈ −73 kJ/mol (favorable)
+      </div>
+      <p><strong>IV. Regulation</strong></p>
+      <p>Three irreversible (regulatory) steps: Steps 1, 3, 10. Key regulatory enzyme: <strong>PFK-1</strong> — the gatekeeper. F-2,6-bisphosphate (produced by PFK-2, regulated by insulin/glucagon) is the most potent allosteric activator of PFK-1. Insulin → ↑F-2,6-bisP → ↑PFK-1 → ↑glycolysis. Glucagon → ↓F-2,6-bisP → ↓PFK-1. Pasteur effect: Aerobic conditions suppress glycolysis (citrate and ATP accumulate, inhibiting PFK-1). Warburg effect: Cancer cells prefer aerobic glycolysis.</p>
+      <p><strong>V. Fate of Pyruvate</strong></p>
+      <ul>
+        <li><strong>Aerobic:</strong> Pyruvate → Acetyl-CoA (PDH complex; mitochondria; requires CoA, TPP, lipoate, NAD⁺, FAD; releases CO₂). Acetyl-CoA → TCA cycle. Also: Pyruvate → OAA (pyruvate carboxylase, biotin; feeds gluconeogenesis)</li>
+        <li><strong>Anaerobic — Animals/Muscle:</strong> Pyruvate + NADH → Lactate + NAD⁺ (Lactate dehydrogenase; regenerates NAD⁺ for glycolysis). Lactate transported to liver → Cori cycle.</li>
+        <li><strong>Anaerobic — Yeast:</strong> Pyruvate → Acetaldehyde + CO₂ (Pyruvate decarboxylase; TPP) → Ethanol + NAD⁺ (Alcohol dehydrogenase)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q3.</span>
+      <span class="q-text">Explain TCA cycle, electron transport chain, and oxidative phosphorylation.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-meta">Metabolism</span>
+      <p><strong>I. TCA Cycle (Krebs Cycle)</strong></p>
+      <p>Located in mitochondrial matrix. Entry: Pyruvate → Acetyl-CoA (PDH complex, −CO₂, +NADH). Acetyl-CoA (2C) + Oxaloacetate (4C) → Citrate (6C) via Citrate synthase.</p>
+      <p>8 steps produce: 2 CO₂, 3 NADH, 1 FADH₂, 1 GTP per turn. Regulatory enzymes: Citrate synthase (−ATP, NADH), Isocitrate dehydrogenase (rate-limiting; +ADP, Ca²⁺; −NADH, ATP), α-KG dehydrogenase (similar regulation). Amphibolic: provides α-KG (Glu), OAA (Asp), succinyl-CoA (heme), citrate (fatty acid synthesis).</p>
+      <p><strong>II. Electron Transport Chain (ETC)</strong></p>
+      <p>Inner mitochondrial membrane. NADH and FADH₂ donate electrons; O₂ is terminal acceptor.</p>
+      <ul>
+        <li><strong>Complex I</strong> (NADH-Q reductase): NADH → CoQ; pumps 4H⁺. Contains FMN and 7 Fe-S clusters. Inhibitor: Rotenone, Amytal.</li>
+        <li><strong>CoQ (Ubiquinone):</strong> Lipid-soluble, mobile. Accepts from Complex I and II.</li>
+        <li><strong>Complex II</strong> (Succinate dehydrogenase): FADH₂ → CoQ; no H⁺ pumping. Contains FAD, Fe-S, Cyt b. Inhibitor: Malonate (competitive with succinate).</li>
+        <li><strong>Complex III</strong> (Cyt bc₁/CoQ-Cyt c reductase): CoQH₂ → Cyt c; pumps 4H⁺ (via Q-cycle). Contains Cyt b, c₁, Rieske Fe-S protein. Inhibitor: Antimycin A.</li>
+        <li><strong>Cytochrome c:</strong> Water-soluble, mobile; shuttles electrons III → IV.</li>
+        <li><strong>Complex IV</strong> (Cytochrome c oxidase): Cyt c → O₂ → H₂O; pumps 2H⁺. Contains Cyt a, a₃, CuA, CuB. Inhibitor: CN⁻, CO, azide, H₂S.</li>
+      </ul>
+      <p><strong>Proton motive force (pmf):</strong> Created by H⁺ pumping from matrix to IMS. Consists of ΔpH (chemical) + Δψ (electrical). Per NADH: 10H⁺ pumped; per FADH₂: 6H⁺.</p>
+      <p><strong>III. Oxidative Phosphorylation (Mitchell's Chemiosmotic Theory)</strong></p>
+      <p><strong>ATP Synthase (Complex V, F₀F₁-ATPase):</strong></p>
+      <ul>
+        <li>F₀: Membrane-embedded; 10–15 c-subunits; forms proton channel; rotary motor</li>
+        <li>F₁: Protruding into matrix; α₃β₃γδε; catalytic sites on β subunits; uses binding-change mechanism</li>
+        <li>3H⁺ per ATP synthesized; F₀ rotates c-ring; drives conformational changes in β subunits (Open → Loose → Tight)</li>
+      </ul>
+      <div class="formula">
+        ATP yield per glucose (current estimates):
+        • Glycolysis: 2 ATP (net) + 2 NADH (cytosolic) → ~5 ATP via MAS
+        • PDH: 2 NADH (mitochondrial) → 5 ATP
+        • TCA: 6 NADH → 15 ATP; 2 FADH₂ → 3 ATP; 2 GTP → 2 ATP
+        Total ≈ 30–32 ATP per glucose
+      </div>
+      <p><strong>Uncouplers</strong> (e.g., 2,4-DNP, thermogenin/UCP-1 in BAT): Dissipate H⁺ gradient as heat without ATP synthesis. Used in thermogenesis in newborns and hibernating animals. Inhibitors of ATP synthase: Oligomycin (blocks H⁺ channel of F₀).</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q4.</span>
+      <span class="q-text">Describe protein structure (primary to quaternary) and properties of amino acids.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-prot">Proteins</span>
+      <p><strong>I. Properties of Amino Acids</strong></p>
+      <p><em>Amphoteric nature:</em> Amino acids have at least two ionizable groups (–COOH, pKa ~2; –NH₃⁺, pKa ~9–10) and act as both acids and bases. At the <strong>isoelectric point (pI)</strong>, the net charge is zero — the zwitterionic form predominates, and the molecule does not migrate in an electric field. pI = (pKa₁ + pKa₂)/2.</p>
+      <p><em>Optical activity:</em> All standard amino acids (except Gly) have a chiral α-carbon → optically active. All are L-amino acids (configuration like L-glyceraldehyde). Some have a second chiral center (Thr, Ile).</p>
+      <p><em>UV absorption:</em> Trp (λmax 280 nm, ε = 5500), Tyr (λmax 274 nm, ε = 1400), Phe (λmax 257 nm). Used to estimate protein concentration.</p>
+      <p><em>Chemical reactions:</em> Ninhydrin reaction (purple with α-amino acids — quantitative; yellow with Pro); Biuret (peptide bonds, violet); Xanthoproteic (aromatic amino acids, yellow); Millon's test (Tyr); Sakaguchi test (Arg); Hopkins-Cole (Trp).</p>
+      <p><strong>II. Peptide Bond and Primary Structure</strong></p>
+      <p>The peptide bond (–CO–NH–) is planar and rigid due to resonance (~40% double bond character). The C–N bond length is 1.33 Å (between C–N single bond 1.45 Å and C=N double bond 1.27 Å). Rotation occurs around Cα–N (φ) and Cα–C (ψ) but not around C–N. Ramachandran plot shows allowed φ/ψ combinations. Peptide bonds are almost always in trans configuration (R groups on opposite sides).</p>
+      <p><strong>III. Secondary Structure</strong></p>
+      <p><em>α-Helix:</em> Right-handed spiral; 3.6 residues/turn; 5.4 Å pitch; H-bond between C=O of residue n and N–H of residue n+4. R-groups project outward. Disrupted by: Pro (no N–H), Gly (too flexible), charged residues in same region, β-branched residues (Val, Ile). Examples: Myoglobin, keratin.</p>
+      <p><em>β-Sheet:</em> Extended polypeptide strands; H-bonds between adjacent strands. Parallel (H-bonds distorted, less stable) vs Antiparallel (H-bonds linear, more stable). Examples: Silk fibroin (mostly antiparallel β-sheet; Gly, Ala predominate; very strong).</p>
+      <p><em>β-turns:</em> Type I, II, II'; reverse direction of polypeptide chain; 4 residues; Gly and Pro common at certain positions.</p>
+      <p><strong>IV. Tertiary Structure</strong></p>
+      <p>Full 3D fold of a single chain, stabilized by: Disulfide bonds (–S–S–; strongest covalent); Hydrophobic interactions (major driving force; non-polar core); Ionic bonds/salt bridges (charged R-groups); H-bonds (polar R-groups, backbone); Van der Waals forces. Chaperones (HSP70, GroEL/GroES) assist folding. Misfolding → amyloid diseases (Alzheimer's, Prion diseases, Type 2 diabetes).</p>
+      <p><strong>V. Quaternary Structure</strong></p>
+      <p>Multiple polypeptide subunits (protomers) associate non-covalently. Homodimer (2 identical), Homotetramer, Heterotetramer (2 different types).</p>
+      <p><em>Hemoglobin (2α + 2β):</em> Classic example. Each subunit has a heme group (protoporphyrin IX + Fe²⁺). O₂ binding is cooperative (sigmoidal O₂ dissociation curve). Allosteric regulation by 2,3-BPG (decreases O₂ affinity), H⁺ (Bohr effect), CO₂. T-state (deoxy, low affinity) ↔ R-state (oxy, high affinity). Sickle cell: Glu6Val mutation → HbS polymerizes when deoxygenated.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q5.</span>
+      <span class="q-text">Explain DNA structure, forms (A, B, Z DNA), denaturation and renaturation.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-nuc">Nucleic Acids</span>
+      <p><strong>I. Components of DNA</strong></p>
+      <p>DNA is a polynucleotide built from deoxyribonucleotides: dAMP, dTMP, dGMP, dCMP. Each nucleotide = deoxyribose + phosphate + base. Linked by <strong>3'→5' phosphodiester bonds</strong>: 3'-OH of one nucleotide + 5'-phosphate of next → ester bond (with H₂O released). Backbone is negatively charged (phosphate groups); bases are inside.</p>
+      <p><strong>II. Watson-Crick Double Helix (B-DNA)</strong></p>
+      <ul>
+        <li>Two antiparallel strands (one 5'→3', other 3'→5')</li>
+        <li>Complementary base pairing: A=T (2 H-bonds), G≡C (3 H-bonds); Chargaff's rules: [A]=[T]; [G]=[C]; [Purines]=[Pyrimidines]</li>
+        <li>Right-handed double helix; 10 bp/turn; pitch (rise per turn) = 34 Å; rise per bp = 3.4 Å; diameter = 20 Å</li>
+        <li>Major groove (wide, ~22 Å) and minor groove (narrow, ~12 Å) — binding sites for proteins and drugs</li>
+        <li>Stabilization: H-bonds (base pairs) + base-stacking interactions (primary force) + ion association with phosphates</li>
+      </ul>
+      <p><strong>III. DNA Forms</strong></p>
+      <div class="highlight">
+        <strong>A-DNA:</strong> Right-handed; 11 bp/turn; more compact (pitch 25 Å); shorter and wider than B; bases tilted ~19° to helix axis; formed at low humidity; double-stranded RNA and RNA-DNA hybrids adopt A-form<br><br>
+        <strong>B-DNA:</strong> Physiological form; right-handed; 10 bp/turn; pitch 34 Å; bases perpendicular to axis; wide major groove; occurs at high humidity (≥92%)<br><br>
+        <strong>Z-DNA:</strong> Left-handed; 12 bp/turn; zigzag backbone (alternating C3'-endo and C2'-endo sugar puckers); longer and narrower; favored by alternating purine-pyrimidine (especially CpG repeats) under high salt; may have a role in gene regulation
+      </div>
+      <p>Other forms: Cruciform (inverted repeats), H-DNA (triplex), G-quadruplex (telomeres — G-rich repeats; TTAGGG in humans).</p>
+      <p><strong>IV. Denaturation (Melting)</strong></p>
+      <p>Denaturation = strand separation due to disruption of H-bonds and stacking interactions. Causes: Heat, extreme pH (>12 or <3), organic solvents (formamide, urea), low ionic strength, DNase.</p>
+      <p>Monitored by <strong>UV absorbance at 260 nm</strong>: Single-stranded DNA absorbs more than double-stranded (unstacking of bases → <strong>hyperchromic effect</strong>). A260 increases as DNA melts.</p>
+      <p><strong>Tm (Melting temperature):</strong> Temperature at which 50% of DNA is denatured (single-stranded). Formula: Tm = 69.3 + 0.41 × (%GC) [in standard salt]. Higher GC content → higher Tm (G≡C has 3 H-bonds vs A=T 2 H-bonds). Also: longer DNA → higher Tm; high salt → higher Tm (shields phosphate repulsion).</p>
+      <p><strong>V. Renaturation (Reannealing)</strong></p>
+      <p>Slow cooling below Tm allows complementary strands to re-hybridize (renature). Rate follows second-order kinetics; expressed as a C₀t (C-naught-t) curve — the product of initial concentration × time at 50% renaturation. Unique sequences (low copy, complex) renature slowly (high C₀t); repetitive sequences (high copy) renature rapidly (low C₀t).</p>
+      <p>Applications: Southern blotting, Northern blotting, PCR, DNA microarrays, FISH, nucleic acid hybridization in general all depend on controlled denaturation and renaturation principles.</p>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="q-num">Q6.</span>
+      <span class="q-text">Discuss enzyme mechanism, classification, factors affecting enzyme activity, and specific activity.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="qa-answer">
+      <span class="tag tag-enz">Enzymes</span>
+      <p><strong>I. Enzyme Characteristics</strong></p>
+      <p>Enzymes are biological catalysts (mostly protein; ribozymes are catalytic RNA). They: (1) Accelerate reactions without being consumed; (2) Do not alter ΔG° (thermodynamics) but lower activation energy (Ea); (3) Are highly specific (substrate, reaction, stereospecific); (4) Are regulated allosterically, covalently, or by feedback. Apoenzyme (protein alone) + Cofactor = Holoenzyme.</p>
+      <p><strong>II. Mechanism of Enzyme Action</strong></p>
+      <p><em>A. Lock and Key hypothesis (Fischer, 1894):</em> Enzyme active site is rigid and complementary to the substrate (like a lock and key). Explains specificity but not induced fit.</p>
+      <p><em>B. Induced Fit hypothesis (Koshland, 1958):</em> The active site is flexible and changes conformation upon substrate binding to achieve optimal complementarity. More accepted. Explains why the enzyme stabilizes the transition state.</p>
+      <p><em>Mechanisms of catalysis:</em></p>
+      <ul>
+        <li><strong>Acid-base catalysis:</strong> Enzyme donates/accepts H⁺ (His acts as acid-base at pH 7 — unique). Serine proteases (trypsin, chymotrypsin, elastase) use catalytic triad: Ser, His, Asp.</li>
+        <li><strong>Covalent catalysis:</strong> Enzyme forms a transient covalent intermediate with substrate. Example: Serine proteases (acyl-enzyme); cysteine proteases.</li>
+        <li><strong>Metal ion catalysis:</strong> Metal ions stabilize transition state, act as Lewis acid, or orient substrate. Example: Carbonic anhydrase (Zn²⁺), carboxypeptidase.</li>
+        <li><strong>Proximity and orientation:</strong> Enzyme brings substrate and catalytic groups together, increasing effective concentration and proper orientation.</li>
+        <li><strong>Transition state stabilization:</strong> Enzyme binds transition state more tightly than substrate or product → lowers Ea.</li>
+      </ul>
+      <p><strong>III. Classification (IUB System)</strong></p>
+      <ul>
+        <li><strong>1. Oxidoreductases:</strong> Transfers e⁻/H; e.g., LDH, G6PD, Cytochrome oxidase</li>
+        <li><strong>2. Transferases:</strong> Transfer groups; e.g., Kinases (phosphate), Transaminases (amino), Methyltransferases</li>
+        <li><strong>3. Hydrolases:</strong> Hydrolysis; e.g., Protease, Lipase, Amylase, Phosphatase</li>
+        <li><strong>4. Lyases:</strong> Add/remove groups non-hydrolytically; e.g., Aldolase, Decarboxylase, Dehydratase</li>
+        <li><strong>5. Isomerases:</strong> Isomerization; e.g., PGI, Triose phosphate isomerase, Mutarotase</li>
+        <li><strong>6. Ligases:</strong> Bond formation + ATP; e.g., Acetyl-CoA carboxylase, DNA ligase, Glutamine synthetase</li>
+      </ul>
+      <p><strong>IV. Factors Affecting Enzyme Activity</strong></p>
+      <p><em>A. Substrate concentration [S] — Michaelis-Menten kinetics:</em></p>
+      <div class="formula">
+        v = Vmax × [S] / (Km + [S])
+        Km = [S] at half-maximal velocity (Vmax/2)
+        Low Km → high affinity | High Km → low affinity
+        Lineweaver-Burk (double reciprocal): 1/v vs 1/[S]
+        Y-intercept = 1/Vmax; X-intercept = −1/Km; slope = Km/Vmax
+      </div>
+      <p><em>B. Temperature:</em> Rate doubles per 10°C rise (Q₁₀ ≈ 2) up to optimal temperature (37°C for human enzymes). Above optimum → denaturation (irreversible loss of activity). Cold → slows rate but preserves enzyme (basis of cold storage).</p>
+      <p><em>C. pH:</em> Each enzyme has an optimal pH (pepsin pH 1.5–2; trypsin pH 8; salivary amylase pH 6.8). Extreme pH → ionization changes in active site residues → loss of activity → denaturation at very extreme pH.</p>
+      <p><em>D. Inhibitors:</em></p>
+      <ul>
+        <li><strong>Competitive:</strong> Structural analog; binds active site; reversible. ↑Km (apparent), Vmax unchanged. Example: Malonate inhibits succinate dehydrogenase (competitive with succinate). Overcome by ↑[S].</li>
+        <li><strong>Non-competitive:</strong> Binds allosteric site; enzyme + inhibitor + substrate all bind. Km unchanged; ↓Vmax. Not overcome by ↑[S]. Example: Heavy metals (Pb²⁺, Hg²⁺).</li>
+        <li><strong>Uncompetitive:</strong> Binds only enzyme-substrate complex. ↓Km (apparent), ↓Vmax. Rare in single-substrate reactions.</li>
+        <li><strong>Irreversible:</strong> Covalent modification. Example: Aspirin (COX-1/2); Organophosphates (Acetylcholinesterase — DFP); Penicillin (transpeptidase).</li>
+      </ul>
+      <p><em>E. Activators and Cofactors:</em> Metal ions (Mg²⁺, Zn²⁺, Ca²⁺) and coenzymes (NAD⁺, CoA, FAD) required for activity.</p>
+      <p><strong>V. Specific Activity</strong></p>
+      <div class="formula">
+        Specific Activity = Enzyme Units (µmol substrate converted/min) / mg protein
+        Unit of enzyme (International Unit, IU): amount that converts 1 µmol substrate/min at optimal conditions
+        Katal: SI unit; 1 kat = 1 mol/s = 6 × 10⁷ IU
+        Specific activity increases during enzyme purification (as total protein decreases while enzyme activity is maintained)
+      </div>
+      <p>Specific activity is used to assess <strong>enzyme purity</strong> — the higher the specific activity, the purer the enzyme preparation. Turnover number (kcat) = Vmax / [E]total = number of substrate molecules converted per enzyme molecule per second. High kcat = highly efficient enzyme (e.g., carbonic anhydrase: 10⁶ s⁻¹).</p>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>Biochemistry Study Guide · All topics covered · Click questions to reveal answers</footer>
+
+<script>
+function toggle(questionEl) {
+  const card = questionEl.parentElement;
+  card.classList.toggle('open');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function expandAll(sectionId) {
+  const section = document.getElementById(sectionId);
+  const cards = section.querySelectorAll('.qa-card');
+  const btn = section.querySelector('.expand-all-btn');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => {
+    if (allOpen) c.classList.remove('open');
+    else c.classList.add('open');
+  });
+  btn.textContent = allOpen ? '⊕ Expand All' : '⊖ Collapse All';
+}
+</script>
+</body>
+</html>
